@@ -12,6 +12,7 @@ import { buildJoinAggregation } from './utilities/buildJoinAggregation.js'
 import { buildProjectionFromSelect } from './utilities/buildProjectionFromSelect.js'
 import { getCollection } from './utilities/getEntity.js'
 import { getSession } from './utilities/getSession.js'
+import { manualSort } from './utilities/manualSort.js'
 import { resolveJoins } from './utilities/resolveJoins.js'
 import { transform } from './utilities/transform.js'
 
@@ -175,6 +176,14 @@ export const queryDrafts: QueryDrafts = async function queryDrafts(
     fields: buildVersionCollectionFields(this.payload.config, collectionConfig),
     operation: 'read',
   })
+
+  if (this.manualJoins) {
+    manualSort({
+      docs: result.docs as Record<string, unknown>[],
+      fields,
+      sort: sortArg,
+    })
+  }
 
   for (let i = 0; i < result.docs.length; i++) {
     const id = result.docs[i].parent

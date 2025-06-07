@@ -12,6 +12,7 @@ import { buildJoinAggregation } from './utilities/buildJoinAggregation.js'
 import { buildProjectionFromSelect } from './utilities/buildProjectionFromSelect.js'
 import { getCollection } from './utilities/getEntity.js'
 import { getSession } from './utilities/getSession.js'
+import { manualSort } from './utilities/manualSort.js'
 import { resolveJoins } from './utilities/resolveJoins.js'
 import { transform } from './utilities/transform.js'
 
@@ -172,6 +173,14 @@ export const find: Find = async function find(
     fields: collectionConfig.fields,
     operation: 'read',
   })
+
+  if (this.manualJoins) {
+    manualSort({
+      docs: result.docs as Record<string, unknown>[],
+      fields: collectionConfig.flattenedFields,
+      sort: sortArg,
+    })
+  }
 
   return result
 }
