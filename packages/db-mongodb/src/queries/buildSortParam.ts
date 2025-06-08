@@ -108,17 +108,13 @@ const relationshipSort = ({
             foreignField: '_id',
             from: foreignCollection.Model.collection.name,
             localField: versions ? `version.${thePath}` : thePath,
-            ...(adapter.manualJoins
-              ? {}
-              : {
-                  pipeline: [
-                    {
-                      $project: {
-                        [sortFieldPath]: true,
-                      },
-                    },
-                  ],
-                }),
+            pipeline: [
+              {
+                $project: {
+                  [sortFieldPath]: true,
+                },
+              },
+            ],
           },
         })
 
